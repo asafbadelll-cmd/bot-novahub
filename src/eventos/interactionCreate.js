@@ -1,6 +1,8 @@
+/**
+ * Evento: InteractionCreate - Maneja las interacciones de comandos slash
+ */
+
 const { Events } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -10,20 +12,24 @@ module.exports = {
         const command = interaction.client.commands.get(interaction.commandName);
 
         if (!command) {
-            console.error(`❌ No existe el comando: ${interaction.commandName}`);
+            console.error(`❌ Comando no encontrado: ${interaction.commandName}`);
             return;
         }
 
         try {
             await command.execute(interaction);
         } catch (error) {
-            console.error(error);
-            const errorMessage = { content: '❌ Hubo un error al ejecutar este comando.', ephemeral: true };
+            console.error(`❌ Error ejecutando comando ${interaction.commandName}:`, error);
+            
+            const errorMessage = { 
+                content: '❌ Hubo un error al ejecutar este comando.', 
+                ephemeral: true 
+            };
             
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp(errorMessage);
+                await interaction.followUp(errorMessage).catch(() => {});
             } else {
-                await interaction.reply(errorMessage);
+                await interaction.reply(errorMessage).catch(() => {});
             }
         }
     },

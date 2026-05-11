@@ -1,3 +1,7 @@
+/**
+ * Sistema: Logger - Registra actividades de usuarios en archivos
+ */
+
 const fs = require('fs');
 const path = require('path');
 
@@ -6,34 +10,40 @@ module.exports = {
     init(client) {
         console.log('📝 Sistema de logging inicializado');
 
-        // Log de mensajes
+        const logsDir = path.join(__dirname, '..', 'logs');
+        
+        // Asegurar que el directorio existe
+        if (!fs.existsSync(logsDir)) {
+            fs.mkdirSync(logsDir, { recursive: true });
+        }
+
+        // Log de mensajes (limitado para evitar exceso de logs)
         client.on('messageCreate', (message) => {
             if (message.author.bot) return;
-            logUserActivity(message.author, `Mensaje en #${message.channel.name}: ${message.content.substring(0, 50)}`);
+            logUserActivity(message.author, `Mensaje en #${message.channel.name}`, logsDir);
         });
 
         // Log de uniones
         client.on('guildMemberAdd', (member) => {
-            logUserActivity(member.user, `Se unió al servidor ${member.guild.name}`);
+            logUserActivity(member.user, `Se unió al servidor ${member.guild.name}`, logsDir);
         });
 
         // Log de comandos slash
         client.on('interactionCreate', (interaction) => {
             if (interaction.isChatInputCommand()) {
-                logUserActivity(interaction.user, `Ejecutó comando /${interaction.commandName}`);
+                logUserActivity(interaction.user, `Ejecutó comando /${interaction.commandName}`, logsDir);
             }
         });
     },
 };
 
-function logUserActivity(user, action) {
-    const logsDir = './src/logs';
-    
-    // Asegurar que el directorio existe
-    if (!fs.existsSync(logsDir)) {
-        fs.mkdirSync(logsDir, { recursive: true });
-    }
-
+/**
+ * Registra la actividad de un usuario en un archivo log
+ * @param {User} user - El usuario de Discord
+ * @param {string} action - La acción realizada
+ * @param {string} logsDir - Directorio de logs
+ */
+function logUserActivity(user, action, logsDir) {
     const userId = user.id;
     const logFile = path.join(logsDir, `${userId}.log`);
     
