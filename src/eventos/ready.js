@@ -2,6 +2,7 @@
  * Evento: Ready - Se ejecuta cuando el bot está listo
  */
 
+const fs = require('fs');
 const { Events, ActivityType } = require('discord.js');
 const { REST, Routes } = require('discord.js');
 
