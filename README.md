@@ -1,6 +1,6 @@
 # 🤖 Discord Bot - Nova Hub
 
-Bot de Discord de código abierto con comandos slash (/), sistemas de moderación automática y eventos de bienvenida.
+Bot de Discord de código abierto con comandos slash (/), sistemas de moderación automática, eventos de bienvenida y **IA integrada con OpenRouter**.
 
 ## 📋 Características Principales
 
@@ -9,6 +9,7 @@ Bot de Discord de código abierto con comandos slash (/), sistemas de moderació
 - ✅ **Eventos:** Bienvenidas y despedidas personalizadas
 - ✅ **Información:** Comandos userinfo, serverinfo, config
 - ✅ **Logging:** Sistema de logs de actividad de usuarios
+- ✅ **🤖 IA Integrada:** Respuestas automáticas con Qwen (OpenRouter)
 - ✅ **API Moderna:** discord.js v14 con EmbedBuilder
 
 ## 📁 Estructura del Proyecto
@@ -27,17 +28,20 @@ Bot de Discord de código abierto con comandos slash (/), sistemas de moderació
 │   │   ├── serverinfo.js   🏠 Info del servidor
 │   │   ├── ping.js         📶 Latencia del bot
 │   │   ├── hola.js         👋 Saludo
-│   │   └── info.js         ℹ️ Información del bot
+│   │   ├── info.js         ℹ️ Información del bot
+│   │   └── ia.js           🤖 Comandos de IA (limpiar, configurar, estado)
 │   ├── eventos/            # Manejadores de eventos
 │   │   ├── ready.js              # Evento de inicio
 │   │   ├── interactionCreate.js  # Manejo de interacciones
+│   │   ├── messageCreate.js      # 💬 Respuestas con IA
 │   │   ├── antiGroserias.js      # 🚫 Anti-lenguaje inapropiado
 │   │   ├── antiSpam.js           # ⚡ Anti-spam
 │   │   ├── antiLinks.js          # 🔗 Anti-enlaces no permitidos
 │   │   ├── bienvenida.js         # 👋 Bienvenida de miembros
 │   │   └── despedida.js          # 👋 Despedida de miembros
 │   ├── sistemas/         # Sistemas del bot
-│   │   └── logger.js     # Sistema de logs
+│   │   ├── logger.js     # Sistema de logs
+│   │   └── iaHandler.js  # 🧠 Manejador de IA (OpenRouter)
 │   ├── logs/             # Logs de actividad de usuarios
 │   └── index.js          # Punto de entrada principal
 ├── .env.example
@@ -59,10 +63,16 @@ npm install
 cp .env.example .env
 ```
 
-4. Edita el archivo `.env` y agrega tu token de Discord:
+4. Edita el archivo `.env` y agrega tu token de Discord y configuración de IA:
 ```env
 DISCORD_TOKEN=tu_token_aqui
 CLIENT_ID=tu_client_id_aqui
+
+# Configuración de IA (OpenRouter)
+OPENROUTER_API_KEY=sk-or-v1-tu_clave_aqui
+AI_MODEL=qwen/qwen-2.5-7b-instruct
+AI_CHANNEL_ID=123456789012345678  # Opcional: canal para respuestas automáticas
+AI_SYSTEM_PROMPT=Eres Nova, un asistente útil y amigable.
 ```
 
 ## 💻 Uso
@@ -98,6 +108,49 @@ npm run dev
 | `/ping` | Latencia del bot |
 | `/info [usuario]` | Información básica |
 | `/hola` | Saludo al bot |
+| `/ia limpiar` | 🧹 Limpia el historial de IA en el canal |
+| `/ia configurar` | ⚙️ Configura el canal de IA (Admin) |
+| `/ia estado` | 📊 Muestra el estado de la IA |
+
+## 🤖 Sistema de IA
+
+El bot integra inteligencia artificial mediante **OpenRouter** usando el modelo gratuito **Qwen 2.5 7B**.
+
+### ¿Cómo funciona?
+
+1. **Por mención:** Menciona al bot en cualquier canal (`@Nova hola`) y responderá con IA.
+2. **Canal dedicado:** Configura un canal específico donde la IA responderá a TODOS los mensajes automáticamente.
+
+### Comandos de IA
+
+| Subcomando | Descripción | Permisos |
+|------------|-------------|----------|
+| `/ia limpiar` | Borra el historial de conversación en ese canal | Todos |
+| `/ia configurar` | Establece el canal para respuestas automáticas | ManageGuild |
+| `/ia estado` | Muestra configuración actual de la IA | Todos |
+
+### Configuración de Variables de Entorno
+
+```env
+# API Key de OpenRouter (Obténla gratis en https://openrouter.ai/keys)
+OPENROUTER_API_KEY=sk-or-v1-tu_clave_aqui
+
+# Modelo a usar (Qwen 2.5 7B es gratuito y rápido)
+AI_MODEL=qwen/qwen-2.5-7b-instruct
+
+# Canal opcional para respuestas automáticas (sin necesidad de mención)
+AI_CHANNEL_ID=123456789012345678
+
+# Personalidad de la IA (opcional)
+AI_SYSTEM_PROMPT=Eres Nova, un asistente virtual útil y amigable en Discord.
+```
+
+### Características de la IA
+
+- 🧠 **Memoria de contexto:** Recuerda las últimas 10 mensagens por canal
+- ⌨️ **Typing indicator:** Muestra "escribiendo..." mientras procesa
+- 🛡️ **Manejo de errores:** Mensajes amigables si falla la API
+- 🔒 **Seguro:** Ignora otros bots y requiere mención o canal configurado
 
 ## 🛡️ Sistemas Automáticos
 
