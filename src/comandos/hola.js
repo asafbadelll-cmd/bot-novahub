@@ -1,3 +1,7 @@
+/**
+ * Comando: hola - Saluda al usuario
+ */
+
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
@@ -5,6 +9,9 @@ module.exports = {
         .setName('hola')
         .setDescription('Saluda al bot'),
     async execute(interaction) {
-        await interaction.reply('¡Hola! Soy un bot de Discord creado con Node.js 🤖');
+        await interaction.reply({
+            content: `¡Hola ${interaction.user.username}! Soy un bot de Discord creado con Node.js 🤖`,
+            allowedMentions: { parse: [] }
+        });
     },
 };

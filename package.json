@@ -1,5 +1,5 @@
 {
-  "name": "workspace",
+  "name": "discord-bot-nova-hub",
   "version": "1.0.0",
   "description": "Discord bot de nova hub codigo abierto",
   "main": "src/index.js",
@@ -8,12 +8,19 @@
     "dev": "node --watch src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "discord",
+    "bot",
+    "nova-hub"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
     "discord.js": "^14.26.4",
     "dotenv": "^17.4.2"
+  },
+  "engines": {
+    "node": ">=16.9.0"
   }
 }
