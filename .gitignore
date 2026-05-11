@@ -1,12 +1,1 @@
-```
-# Dependencies
-node_modules/
-
-# Logs and temp files
-*.log
-*.tmp
-
-# Environment
-.env
-.env.
-```
+(src/index.js)
